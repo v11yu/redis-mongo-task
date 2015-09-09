@@ -13,10 +13,12 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
-
-# Windows shortcuts
-*.lnk
-
+*.bak
+.settings/*
+target/*
+log/*
+*svn*
+*.class
 # =========================
 # Operating System Files
 # =========================
@@ -27,6 +29,9 @@ $RECYCLE.BIN/
 .DS_Store
 .AppleDouble
 .LSOverride
+
+# Icon must end with two \r
+Icon
 
 # Thumbnails
 ._*
