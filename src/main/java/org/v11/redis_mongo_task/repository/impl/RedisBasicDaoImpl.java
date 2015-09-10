@@ -29,15 +29,16 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 	@Override
 	public void delete(String pattern) {
 		// TODO Auto-generated method stub
-		Log.debug("redis delete pattern "+pattern);
+		Log.info("删除操作:redis delete pattern "+pattern);
 		Set<String> keys = jedis.keys(pattern);
+		if(keys.size() == 0) return ;
 		String a[] = new String[keys.size()];
 		jedis.del(keys.toArray(a));
 	}
 	@Override
 	public boolean update(String id) {
 		// TODO Auto-generated method stub
-		Log.debug("redis update id "+id);
+		Log.info("检查 "+id+" 是否需要更新");
 		Set<String> st = jedis.keys(id+"*");
 		if(st.size() != KEY_NUMS){
 			return false;
@@ -48,6 +49,7 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 			String value = jedis.get(attr);
 			obj.put(dbkey, value);
 		}
+		Log.info("更新操作: "+id+" 写入更新属性值");
 		mongoDao.update(obj, KEYS);
 		return true;
 	}
