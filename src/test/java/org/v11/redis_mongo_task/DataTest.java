@@ -10,7 +10,7 @@ public class DataTest {
 	@Test
 	public void testMsg(){
 		MongoBasicDao msgDao = new MongoBasicDaoImpl("msginfo");
-    	DBObject obj = msgDao.findById("tsina_3842138922480576");
+    	DBObject obj = msgDao.findById("tsina_3881187430482731");
         System.out.println(obj);
 	}
 }

@@ -1,5 +1,6 @@
 package org.v11.redis_mongo_task.repository.impl;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.v11.redis_mongo_task.repository.MongoBasicDao;
@@ -27,7 +28,7 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 		KEY_NUMS = KEYS.split(",").length;
 	}
 	@Override
-	public void delete(String pattern) {
+	public void deleteByPattern(String pattern) {
 		// TODO Auto-generated method stub
 		Log.info("删除操作:redis delete pattern "+pattern);
 		Set<String> keys = jedis.keys(pattern);
@@ -39,15 +40,15 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 	public boolean update(String id) {
 		// TODO Auto-generated method stub
 		Log.info("检查 "+id+" 是否需要更新");
-		Set<String> st = jedis.keys(id+"*");
-		if(st.size() != KEY_NUMS){
+		Map<String,String> mp = jedis.hgetAll(id);
+		if(mp.size() != KEY_NUMS){
 			return false;
 		}
 		DBObject obj = mongoDao.findById(id);
-		for(String attr:st){
-			String dbkey = attr.split("#")[1];
-			String value = jedis.get(attr);
-			obj.put(dbkey, value);
+		String keys[] = KEYS.split(",");
+		for(String attr:keys){
+			String value = mp.get(attr);
+			if(value !=null) obj.put(attr, mp.get(attr));
 		}
 		Log.info("更新操作: "+id+" 写入更新属性值");
 		mongoDao.update(obj, KEYS);
@@ -55,5 +56,10 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 	}
 	public Jedis getJedis() {
 		return jedis;
+	}
+	@Override
+	public void delete(String key) {
+		// TODO Auto-generated method stub
+		jedis.del(key);
 	}
 }

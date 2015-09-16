@@ -8,6 +8,6 @@ public class DeleteTest {
 	RedisBasicDao redisDao = new RedisBasicDaoImpl();
 	@Test
 	public void redisDeleteAll(){
-		redisDao.delete("*");
+		redisDao.deleteByPattern("*");
 	}
 }

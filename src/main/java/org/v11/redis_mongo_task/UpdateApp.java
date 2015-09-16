@@ -19,14 +19,13 @@ public class UpdateApp {
 		Jedis jedis = redisDao.getJedis();
 		Set<String> allkeys = jedis.keys("*");
 		for(String key:allkeys){
-			Log.debug("redis key: "+key);
-			String ls[] = key.split("#");
-			if(ls.length!=2) continue;
-			String id = ls[0];
+			Log.info("do redis key: "+key);
+			//if(!key.matches("tsina*")) continue;
+			String id = key;
 			if(mk.contains(id)) continue;
 			mk.add(id);
 			if(redisDao.update(id)){
-				redisDao.delete(id+"*");
+				redisDao.delete(id);
 			}	
 		}
 	}
