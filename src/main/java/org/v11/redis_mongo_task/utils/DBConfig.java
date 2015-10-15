@@ -12,7 +12,8 @@ import java.util.Properties;
 public class DBConfig {
 	private DBConfig(){}
 	private static Properties props = new Properties(); 
-	static{
+	public static void init(){
+		props = new Properties();
 		try {
 			InputStream in = 
 					DBConfig.class.getResourceAsStream("/db.properties");

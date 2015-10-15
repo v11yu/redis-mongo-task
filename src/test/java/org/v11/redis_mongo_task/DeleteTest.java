@@ -10,4 +10,7 @@ public class DeleteTest {
 	public void redisDeleteAll(){
 		redisDao.deleteByPattern("*");
 	}
+	public static void main(String[] args) {
+		new DeleteTest().redisDeleteAll();
+	}
 }

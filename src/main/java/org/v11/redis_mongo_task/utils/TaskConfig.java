@@ -12,7 +12,8 @@ import java.util.Properties;
 public class TaskConfig {
 	private TaskConfig(){}
 	private static Properties props = new Properties(); 
-	static{
+	public static void init(){
+		props = new Properties();
 		try {
 			InputStream in = 
 					TaskConfig.class.getResourceAsStream("/task.properties");
