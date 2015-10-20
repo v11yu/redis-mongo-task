@@ -26,6 +26,9 @@ public class TaskConfig {
 			e.printStackTrace();
 		}
 	}
+	static{
+		init();
+	}
 	public static String getValue(String key){
 		return props.getProperty(key);
 	}
