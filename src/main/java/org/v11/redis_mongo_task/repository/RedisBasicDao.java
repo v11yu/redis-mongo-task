@@ -12,5 +12,13 @@ public interface RedisBasicDao {
 	 * @return
 	 */
 	public boolean update(String id);
+	/**
+	 * 直接将redis内容更新mongodb，不进行检查是否全部到达<br />
+	 * update keys with check all attribute
+	 * @param id
+	 * @return
+	 */
+	/* 好处：有一部分key中，会有较多的keys，这样会减少mongodb压力 */
+	public boolean updateNoCheck(String id);
 	public Jedis getJedis();
 }

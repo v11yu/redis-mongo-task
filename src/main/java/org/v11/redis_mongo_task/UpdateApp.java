@@ -26,7 +26,7 @@ public class UpdateApp {
 		for(String key:allkeys){
 			//if(!key.matches("tsina*")) continue;
 			String id = key;
-			if(redisDao.update(id)){
+			if(redisDao.updateNoCheck(id)){
 				redisDao.delete(id);
 				hasUpdated++;
 			}

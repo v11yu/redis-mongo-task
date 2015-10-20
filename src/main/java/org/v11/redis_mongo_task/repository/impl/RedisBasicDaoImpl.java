@@ -101,4 +101,55 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 		Log.debug("删除操作:redis delete "+key);
 		jedis.del(key);
 	}
+	@Override
+	public boolean updateNoCheck(String id) {
+		// TODO Auto-generated method stub
+		Log.debug("直接进行 "+id+" 更新");
+		Map<String,String> mp = null;
+		try{
+			mp = jedis.hgetAll(id);
+		}catch(Exception e){
+			Log.error("redis 取值type异常（非mp类型） "+id+" data type error "+e);
+			delete(id);
+			return false;
+		}
+		if(mp == null){
+			Log.error(id + " mp is null");
+			return false;
+		}
+		DBObject obj = mongoDao.findById(id);
+		if(obj == null){
+			Log.error(id + " mongo obj is null");
+			delete(id);
+			return false;
+		}
+		String keys[] = KEYS.split(",");
+		String types[] = TaskConfig.getValue("type").split(",");
+		int i=0,hit = 0;
+		try{
+			for (String attr : keys) {
+				String value = mp.get(attr);
+				if (value != null) {
+					hit ++;
+					Log.debug("value != null");
+					if (types[i].equals("string")) obj.put(attr, value);
+					else if (types[i].equals("int")) obj.put(attr, Integer.parseInt(value));
+					else if (types[i].equals("double")) obj.put(attr, Double.parseDouble(value));
+					else {
+						Log.error("未知类型!!undefine type error");
+						delete(id);
+						return false;
+					}
+				}
+				i++;
+		}
+		}catch(Exception e){
+			Log.error("类型定义错误 "+id+" config define type error!! please check task.properties file "+e);
+			delete(id);
+			return false;
+		}
+		Log.debug("更新操作: "+id+" 写入更新属性值,命中属性个数："+ hit);
+		mongoDao.update(obj, KEYS);
+		return true;
+	}
 }
