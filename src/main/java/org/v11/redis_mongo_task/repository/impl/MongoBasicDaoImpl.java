@@ -20,22 +20,32 @@ public class MongoBasicDaoImpl implements MongoBasicDao{
 	@Override
 	public void update(DBObject newObj, String keyNames) {
 		// TODO Auto-generated method stub
-		Log.debug("更新操作: "+colName+" options"+newObj+", keynames"+keyNames);
-		DBObject query = new BasicDBObject("_id",newObj.get("_id"));
-		BasicDBObject updateObj = new BasicDBObject();
-		String names[] = keyNames.split(",");
-        for(String keyName : names){
-        	updateObj.append( keyName,newObj.get(keyName));
-        }
-        col.update(query, new BasicDBObject("$set", updateObj));
+		try {
+			Log.debug("更新操作: " + colName + " options" + newObj + ", keynames"
+					+ keyNames);
+			DBObject query = new BasicDBObject("_id", newObj.get("_id"));
+			BasicDBObject updateObj = new BasicDBObject();
+			String names[] = keyNames.split(",");
+			for (String keyName : names) {
+				updateObj.append(keyName, newObj.get(keyName));
+			}
+			col.update(query, new BasicDBObject("$set", updateObj));
+		} catch (Exception e) {
+			Log.error("mongo更新数据库异常" + e.getMessage());
+		}
 	}
 
 	@Override
 	public DBObject findById(String id) {
 		// TODO Auto-generated method stub
-		DBObject obj = col.findOne(id);
-		Log.debug("查询操作: "+colName+" findById"+id+", result:"+obj);
-		return obj;
+		try {
+			DBObject obj = col.findOne(id);
+			Log.debug("查询操作: " + colName + " findById" + id + ", result:" + obj);
+			return obj;
+		} catch (Exception e) {
+			Log.error("mongo查询数据库异常"+e.getMessage());
+			return null;
+		}
 	}
 
 }
