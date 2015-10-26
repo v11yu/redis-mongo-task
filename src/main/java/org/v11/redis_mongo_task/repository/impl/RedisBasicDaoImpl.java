@@ -15,7 +15,6 @@ import com.mongodb.DBObject;
 import redis.clients.jedis.Jedis;
 
 public class RedisBasicDaoImpl implements RedisBasicDao{
-	private Jedis jedis;
 	String KEYS;
 	Integer KEY_NUMS;
 	MongoBasicDao mongoDao;
@@ -23,7 +22,6 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 	public RedisBasicDaoImpl() {
 		// TODO Auto-generated constructor stub
 		mongoDao = new MongoBasicDaoImpl(colName);
-		jedis = RedisUtil.getUniqueJedis();
 		KEYS = TaskConfig.getValue("keys");
 		KEY_NUMS = KEYS.split(",").length;
 	}
@@ -31,10 +29,10 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 	public void deleteByPattern(String pattern) {
 		// TODO Auto-generated method stub
 		Log.debug("删除操作:redis delete pattern "+pattern);
-		Set<String> keys = jedis.keys(pattern);
+		Set<String> keys = RedisUtil.keys(pattern);
 		if(keys.size() == 0) return ;
 		String a[] = new String[keys.size()];
-		jedis.del(keys.toArray(a));
+		RedisUtil.del(keys.toArray(a));
 	}
 	@Override
 	public boolean update(String id) {
@@ -42,7 +40,7 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 		Log.debug("检查 "+id+" 是否需要更新");
 		Map<String,String> mp = null;
 		try{
-			mp = jedis.hgetAll(id);
+			mp = RedisUtil.hgetAll(id);
 		}catch(Exception e){
 			Log.error("redis 取值type异常 "+id+" data type error "+e);
 			delete(id);
@@ -92,14 +90,12 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 		mongoDao.update(obj, KEYS);
 		return true;
 	}
-	public Jedis getJedis() {
-		return jedis;
-	}
+	
 	@Override
 	public void delete(String key) {
 		// TODO Auto-generated method stub
 		Log.debug("删除操作:redis delete "+key);
-		jedis.del(key);
+		RedisUtil.del(key);
 	}
 	@Override
 	public boolean updateNoCheck(String id) {
@@ -107,9 +103,9 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 		Log.debug("直接进行 "+id+" 更新");
 		Map<String,String> mp = null;
 		try{
-			mp = jedis.hgetAll(id);
+			mp = RedisUtil.hgetAll(id);
 		}catch(Exception e){
-			Log.error("redis 取值type异常（非mp类型） "+id+" data type error "+e);
+			Log.error("redis取值异常，可能是redis 取值type异常（非mp类型） "+id+" data type error "+e);
 			delete(id);
 			return false;
 		}

@@ -1,5 +1,8 @@
 package org.v11.redis_mongo_task.utils;
 
+import java.util.Map;
+import java.util.Set;
+
 import redis.clients.jedis.Jedis;
 
 /**
@@ -19,5 +22,20 @@ public class RedisUtil {
 			unique = new RedisUtil();
 		}
 		return unique.jedis;
+	}
+	public static synchronized Set<String> keys (String pattern){
+		
+		return RedisUtil.getUniqueJedis().keys(pattern);
+	}
+	public static synchronized Long del(final String... keys){
+		
+		return RedisUtil.getUniqueJedis().del(keys);
+	}
+	public static synchronized Long del(final String key){
+		
+		return RedisUtil.getUniqueJedis().del(key);
+	}
+	public static synchronized Map<String, String> hgetAll(final String key){
+		return RedisUtil.getUniqueJedis().hgetAll(key);
 	}
 }

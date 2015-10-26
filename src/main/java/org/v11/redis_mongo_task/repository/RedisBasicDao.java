@@ -20,5 +20,4 @@ public interface RedisBasicDao {
 	 */
 	/* 好处：有一部分key中，会有较多的keys，这样会减少mongodb压力 */
 	public boolean updateNoCheck(String id);
-	public Jedis getJedis();
 }
