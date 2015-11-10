@@ -18,20 +18,17 @@ public class MongoBasicDaoImpl implements MongoBasicDao{
 		col = MongoDbUtil.getCollection(colName);
 	}
 	@Override
-	public void update(DBObject newObj, String keyNames) {
+	public boolean update(BasicDBObject updateObj, String id) {
 		// TODO Auto-generated method stub
 		try {
-			Log.debug("更新操作: " + colName + " options" + newObj + ", keynames"
-					+ keyNames);
-			DBObject query = new BasicDBObject("_id", newObj.get("_id"));
-			BasicDBObject updateObj = new BasicDBObject();
-			String names[] = keyNames.split(",");
-			for (String keyName : names) {
-				updateObj.append(keyName, newObj.get(keyName));
-			}
+			Log.debug("更新操作: " + colName + " options" + updateObj + ", _id:"
+					+ id);
+			DBObject query = new BasicDBObject("_id", id);
 			col.update(query, new BasicDBObject("$set", updateObj));
+			return true;
 		} catch (Exception e) {
-			Log.error("mongo更新数据库异常" + e.getMessage());
+			Log.debug("mongo更新数据库异常" + e);
+			return false;
 		}
 	}
 

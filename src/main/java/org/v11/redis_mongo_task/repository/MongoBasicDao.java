@@ -1,14 +1,15 @@
 package org.v11.redis_mongo_task.repository;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 public interface MongoBasicDao {
 	/**
 	 * 更新数据库字段
-	 * @param newObj 新的obj
-	 * @param keyNames 需要更新的keys,逗号隔开
+	 * @param updateObj 新的obj
+	 * @param id 需要更新的id
 	 */
-	public void update(DBObject newObj, String keyNames);
+	public boolean update(BasicDBObject updateObj, String id);
 	/**
 	 * 通过id获取Object
 	 * @param id

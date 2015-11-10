@@ -15,7 +15,7 @@ public class RedisUtil {
 	private String host = DBConfig.getValue("RedisIp");
 	private Integer port = DBConfig.getNum("RedisPort");
 	private RedisUtil(){
-		jedis = new Jedis(host, port);
+		jedis = new Jedis(host, port,300*1000);
 	}
 	public static Jedis getUniqueJedis(){
 		if(unique == null){
