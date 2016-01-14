@@ -27,7 +27,8 @@ public class MongoBasicDaoImpl implements MongoBasicDao{
 			col.update(query, new BasicDBObject("$set", updateObj));
 			return true;
 		} catch (Exception e) {
-			Log.debug("mongo更新数据库异常" + e);
+			Log.error(id+" "+updateObj);
+			Log.error("mongo更新数据库异常" + e);
 			return false;
 		}
 	}

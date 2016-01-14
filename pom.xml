@@ -74,6 +74,14 @@
 			<version>${mongodb.version}</version>
 		</dependency>
 		<!-- End: mongodb -->
+		<!-- Start: json package -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+		</dependency>
+
+		<!-- End: json package -->
 	</dependencies>
 	<build>
 		<plugins>

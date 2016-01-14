@@ -1,17 +1,22 @@
 package org.v11.redis_mongo_task.repository.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.v11.redis_mongo_task.repository.MongoBasicDao;
 import org.v11.redis_mongo_task.repository.RedisBasicDao;
 import org.v11.redis_mongo_task.utils.DBConfig;
 import org.v11.redis_mongo_task.utils.Log;
 import org.v11.redis_mongo_task.utils.RedisUtil;
 import org.v11.redis_mongo_task.utils.TaskConfig;
+import org.v11.redis_mongo_task.utils.TypeConverter;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 
 import redis.clients.jedis.Jedis;
 
@@ -66,10 +71,24 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 				String value = mp.get(attr);
 				if (value != null) {
 					hit ++;
+					/*
+					 *  开始对redis中的string进行类型转换，根据properties指定好的type
+					 *  这段代码可以抽离出来，解耦合成单独的功能函数，因为现在类型很少，所以先不解耦合了
+					 */
 					Log.debug("value != null");
 					if (types[i].equals("string")) updateObj.append(attr, value);
 					else if (types[i].equals("int")) updateObj.append(attr, Integer.parseInt(value));
 					else if (types[i].equals("double")) updateObj.append(attr, Double.parseDouble(value));
+					else if (types[i].equals("stringarray")){
+						List<String> strs = TypeConverter.str2strs(value);
+						if(strs == null) continue;
+						updateObj.append(attr, strs);
+					}
+					else if (types[i].equals("maparray")){
+						List<DBObject> dbs = TypeConverter.str2DBObjects(value);
+						if(dbs == null) continue;
+						updateObj.append(attr, dbs);
+					}
 					else {
 						Log.error("未知类型!!undefine type error");
 						delete(id);
@@ -85,7 +104,7 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 		}
 		Log.debug("更新操作: "+id+" 写入更新属性值,命中属性个数："+ hit);
 		if(!mongoDao.update(updateObj, id)){
-			Log.debug(id + " mongo update fail");
+			Log.error(id + " mongo update fail");
 			delete(id);
 			return false;
 		}
