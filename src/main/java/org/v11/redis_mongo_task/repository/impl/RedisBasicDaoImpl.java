@@ -102,9 +102,15 @@ public class RedisBasicDaoImpl implements RedisBasicDao{
 			delete(id);
 			return false;
 		}
+		if(hit == 0){
+			Log.error("hit = 0, nothing need update,extra-attribute had added");
+			Log.error("show the mp:"+mp);
+			delete(id);
+			return false;
+		}
 		Log.debug("更新操作: "+id+" 写入更新属性值,命中属性个数："+ hit);
 		if(!mongoDao.update(updateObj, id)){
-			Log.error(id + " mongo update fail");
+			Log.error(id + " mongo update fail"+" icount = "+i+" hit = "+hit);
 			delete(id);
 			return false;
 		}

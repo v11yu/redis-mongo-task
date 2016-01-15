@@ -12,9 +12,13 @@ import org.v11.redis_mongo_task.utils.RedisUtil;
 import org.v11.redis_mongo_task.utils.TaskConfig;
 
 import redis.clients.jedis.Jedis;
-
+/**
+ * 多线程并发job
+ * @author v11
+ *
+ */
 public class NewUpdateApp {
-	static int SplitNum = 5;
+	int SplitNum = DBConfig.getNum("ThreadNum");
 	public void jobDetail() throws InterruptedException{
 		Log.info("初始化properties文件....");
 		TaskConfig.init();

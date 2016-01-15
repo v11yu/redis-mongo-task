@@ -11,7 +11,9 @@ import org.v11.redis_mongo_task.utils.RedisUtil;
 import org.v11.redis_mongo_task.utils.TaskConfig;
 
 import redis.clients.jedis.Jedis;
-
+/**
+ *  单线程
+ */
 public class UpdateApp {
 	
 	public void jobDetail(){
